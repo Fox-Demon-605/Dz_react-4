@@ -49,7 +49,7 @@ const initialTasks = [
     id: 'task-4',
     columnId: 'done',
     title: 'Настроить стили',
-    description: 'Подключить обычный CSS',
+    description: 'Подключить SCSS-модули',
     priority: 'low',
     dueDate: '',
     tags: ['дизайн'],
@@ -62,17 +62,21 @@ const initialTasks = [
 const priorities = ['low', 'medium', 'high']
 
 const normalizeTags = (value) => {
-  const items = Array.isArray(value) ? value : String(value ?? '').split(',')
+  const items = Array.isArray(value)
+    ? value
+    : String(value ?? '').split(',')
 
-  return [...new Set(
-    items
-      .filter((item) => typeof item === 'string')
-      .map((item) => item.trim().toLowerCase())
-      .filter(Boolean),
-  )].slice(0, 10)
+  return [
+    ...new Set(
+      items
+        .filter((item) => typeof item === 'string')
+        .map((item) => item.trim().toLowerCase())
+        .filter(Boolean),
+    ),
+  ].slice(0, 10)
 }
 
-const normalizeTaskData = (data) => ({
+const normalizeTaskData = (data = {}) => ({
   title: String(data.title ?? '').trim(),
   description: String(data.description ?? '').trim(),
   priority: priorities.includes(data.priority) ? data.priority : 'medium',
@@ -95,7 +99,6 @@ const moveItem = (items, fromIndex, toIndex) => {
   const result = [...items]
   const [item] = result.splice(fromIndex, 1)
   result.splice(toIndex, 0, item)
-
   return result
 }
 
@@ -110,7 +113,7 @@ const normalizeImportedBoard = (data) => {
   }
 
   if (data.columns.length > 100 || data.tasks.length > 10000) {
-    throw new Error('Слишком большой файл: максимум 100 колонок и 10 000 заметок.')
+    throw new Error('Максимум 100 колонок и 10 000 задач.')
   }
 
   const columnIds = new Set()
@@ -124,7 +127,7 @@ const normalizeImportedBoard = (data) => {
       !column.title.trim() ||
       columnIds.has(column.id)
     ) {
-      throw new Error('Некорректные данные колонок или повторяющиеся ID.')
+      throw new Error('Некорректные колонки или повторяющиеся ID.')
     }
 
     columnIds.add(column.id)
@@ -148,18 +151,18 @@ const normalizeImportedBoard = (data) => {
       typeof task.title !== 'string' ||
       !task.title.trim()
     ) {
-      throw new Error('Некорректные заметки, повторяющиеся ID или неизвестная колонка.')
+      throw new Error(
+        'Некорректные задачи, повторяющиеся ID или неизвестная колонка.',
+      )
     }
 
     taskIds.add(task.id)
-
     const now = new Date().toISOString()
-    const normalized = normalizeTaskData(task)
 
     return {
       id: task.id,
       columnId: task.columnId,
-      ...normalized,
+      ...normalizeTaskData(task),
       pinned: task.pinned === true,
       createdAt:
         typeof task.createdAt === 'string' &&
@@ -200,9 +203,11 @@ export const useBoardStore = create(
 
       renameColumn: (columnId, title) => {
         const trimmedTitle = String(title ?? '').trim()
-        if (!trimmedTitle) return false
 
-        if (!get().columns.some((column) => column.id === columnId)) {
+        if (
+          !trimmedTitle ||
+          !get().columns.some((column) => column.id === columnId)
+        ) {
           return false
         }
 
@@ -220,11 +225,10 @@ export const useBoardStore = create(
       deleteColumn: (columnId) => {
         const state = get()
 
-        if (!state.columns.some((column) => column.id === columnId)) {
-          return false
-        }
-
-        if (state.tasks.some((task) => task.columnId === columnId)) {
+        if (
+          !state.columns.some((column) => column.id === columnId) ||
+          state.tasks.some((task) => task.columnId === columnId)
+        ) {
           return false
         }
 
@@ -279,8 +283,13 @@ export const useBoardStore = create(
 
       updateTask: (taskId, data) => {
         const normalized = normalizeTaskData(data)
+        const columnId = data?.columnId
 
-        if (!normalized.title || !get().tasks.some((task) => task.id === taskId)) {
+        if (
+          !normalized.title ||
+          !get().tasks.some((task) => task.id === taskId) ||
+          !get().columns.some((column) => column.id === columnId)
+        ) {
           return false
         }
 
@@ -289,7 +298,12 @@ export const useBoardStore = create(
         set((state) => ({
           tasks: state.tasks.map((task) =>
             task.id === taskId
-              ? { ...task, ...normalized, updatedAt: now }
+              ? {
+                  ...task,
+                  ...normalized,
+                  columnId,
+                  updatedAt: now,
+                }
               : task,
           ),
         }))
@@ -351,23 +365,23 @@ export const useBoardStore = create(
 
       moveTaskToColumn: (taskId, targetColumnId) => {
         const state = get()
+        const task = state.tasks.find((item) => item.id === taskId)
 
         if (
-          !state.tasks.some((task) => task.id === taskId) ||
+          !task ||
+          task.columnId === targetColumnId ||
           !state.columns.some((column) => column.id === targetColumnId)
         ) {
           return false
         }
 
+        const now = new Date().toISOString()
+
         set((current) => ({
-          tasks: current.tasks.map((task) =>
-            task.id === taskId
-              ? {
-                  ...task,
-                  columnId: targetColumnId,
-                  updatedAt: new Date().toISOString(),
-                }
-              : task,
+          tasks: current.tasks.map((item) =>
+            item.id === taskId
+              ? { ...item, columnId: targetColumnId, updatedAt: now }
+              : item,
           ),
         }))
 
@@ -381,14 +395,14 @@ export const useBoardStore = create(
         const task = state.tasks.find((item) => item.id === taskId)
         if (!task) return false
 
-        const currentIndex = state.columns.findIndex(
+        const index = state.columns.findIndex(
           (column) => column.id === task.columnId,
         )
-        const targetColumn = state.columns[currentIndex + direction]
+        const targetColumn = state.columns[index + direction]
 
-        if (!targetColumn) return false
-
-        return get().moveTaskToColumn(taskId, targetColumn.id)
+        return targetColumn
+          ? get().moveTaskToColumn(taskId, targetColumn.id)
+          : false
       },
 
       reorderTask: (taskId, direction) => {
@@ -408,8 +422,8 @@ export const useBoardStore = create(
 
         const firstIndex = tasks.findIndex((item) => item.id === taskId)
         const secondIndex = tasks.findIndex((item) => item.id === targetId)
-
         const nextTasks = [...tasks]
+
         ;[nextTasks[firstIndex], nextTasks[secondIndex]] = [
           nextTasks[secondIndex],
           nextTasks[firstIndex],
@@ -426,8 +440,7 @@ export const useBoardStore = create(
       },
 
       importBoard: (data) => {
-        const board = normalizeImportedBoard(data)
-        set(board)
+        set(normalizeImportedBoard(data))
         return true
       },
 

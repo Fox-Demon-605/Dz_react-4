@@ -1,0 +1,54 @@
+@use './variables' as v;
+
+@mixin surface {
+  border: 1px solid var(--border);
+  border-radius: v.$radius-md;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+@mixin dashed-button {
+  border: 1px dashed var(--accent-border);
+  border-radius: v.$radius-sm;
+  background: var(--accent-soft);
+  color: var(--accent);
+
+  &:hover:not(:disabled) {
+    border-style: solid;
+  }
+}
+
+@mixin icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: v.$radius-sm;
+  background: transparent;
+  color: var(--muted);
+
+  &:hover:not(:disabled) {
+    border-color: var(--border);
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+}
+
+@mixin primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: v.$space-2;
+  min-height: 41px;
+  padding: 10px 15px;
+  border: 1px solid var(--accent);
+  border-radius: v.$radius-sm;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+
+  &:hover:not(:disabled) {
+    border-color: var(--accent-hover);
+    background: var(--accent-hover);
+  }
+}

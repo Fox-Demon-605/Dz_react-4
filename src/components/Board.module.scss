@@ -1,0 +1,49 @@
+@use '../styles/variables' as v;
+
+.heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: v.$space-4;
+  margin-bottom: v.$space-4;
+
+  h2 {
+    margin: 6px 0 0;
+    font-size: 23px;
+  }
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.17em;
+}
+
+.count {
+  padding: v.$space-2 v.$space-3;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.board {
+  display: flex;
+  align-items: flex-start;
+  gap: v.$space-4;
+  overflow-x: auto;
+  padding: 2px 2px 22px;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.noColumns {
+  padding: v.$space-6;
+  border: 1px dashed var(--border-strong);
+  border-radius: v.$radius-md;
+  background: var(--surface);
+  color: var(--muted);
+  text-align: center;
+}

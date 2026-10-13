@@ -1,0 +1,440 @@
+@use './styles/variables' as v;
+@use './styles/mixins' as mixins;
+
+.app {
+  min-height: 100vh;
+  padding: 34px clamp(16px, 3vw, 48px) 50px;
+  background:
+    radial-gradient(circle at 8% 0%, var(--page-glow), transparent 31rem),
+    radial-gradient(
+      circle at 96% 18%,
+      var(--page-glow-secondary),
+      transparent 29rem
+    ),
+    var(--page);
+  color: var(--text);
+}
+
+.app * {
+  box-sizing: border-box;
+}
+
+.app button,
+.app input,
+.app textarea,
+.app select {
+  font: inherit;
+}
+
+.app button {
+  cursor: pointer;
+  transition:
+    background-color v.$transition-fast,
+    border-color v.$transition-fast,
+    color v.$transition-fast,
+    transform v.$transition-fast;
+}
+
+.app button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.app button svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
+.app :is(button, input, textarea, select):focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.themeLight {
+  color-scheme: light;
+
+  --page: #{v.$light-page};
+  --page-glow: #e9e7ff;
+  --page-glow-secondary: #e9f5ff;
+  --surface: #{v.$light-surface};
+  --surface-hover: #f8f8ff;
+  --column: #{v.$light-column};
+  --text: #{v.$light-text};
+  --muted: #{v.$light-muted};
+  --border: #{v.$light-border};
+  --border-strong: #cfd7e7;
+  --accent: #{v.$light-accent};
+  --accent-hover: #5146c9;
+  --accent-soft: #f0eeff;
+  --accent-border: #aba1fa;
+  --focus-ring: #a7a0f5;
+  --shadow: #{v.$shadow-light};
+  --shadow-hover: 0 20px 42px rgba(72, 65, 150, 0.2);
+  --danger: #ca3e58;
+}
+
+.themeDark {
+  color-scheme: dark;
+
+  --page: #{v.$dark-page};
+  --page-glow: rgba(112, 92, 255, 0.15);
+  --page-glow-secondary: rgba(40, 143, 207, 0.1);
+  --surface: #{v.$dark-surface};
+  --surface-hover: #292f48;
+  --column: #{v.$dark-column};
+  --text: #{v.$dark-text};
+  --muted: #{v.$dark-muted};
+  --border: #{v.$dark-border};
+  --border-strong: #4b5672;
+  --accent: #{v.$dark-accent};
+  --accent-hover: #7b70ed;
+  --accent-soft: #333055;
+  --accent-border: #8074ec;
+  --focus-ring: #b1a8ff;
+  --shadow: #{v.$shadow-dark};
+  --shadow-hover: 0 20px 46px rgba(0, 0, 0, 0.36);
+  --danger: #ff8298;
+}
+
+.appInner {
+  width: min(100%, 1660px);
+  margin: 0 auto;
+}
+
+.pageHeader {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: v.$space-6;
+  overflow: hidden;
+  min-height: 220px;
+  margin-bottom: v.$space-5;
+  padding: clamp(24px, 3.5vw, 44px);
+  border-radius: v.$radius-lg;
+  background: linear-gradient(115deg, #383398, #6658cf 55%, #9582e2);
+  box-shadow: 0 20px 46px rgba(71, 59, 155, 0.19);
+  color: #fff;
+}
+
+.headerContent,
+.headerActions {
+  position: relative;
+  z-index: 1;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: v.$space-5;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+.brandIcon {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: v.$radius-sm;
+  background: rgba(255, 255, 255, 0.17);
+}
+
+.pageHeader h1 {
+  margin: 0 0 10px;
+  font-size: clamp(30px, 4vw, 52px);
+  line-height: 1.08;
+}
+
+.pageHeader p {
+  max-width: 600px;
+  margin: 0;
+  opacity: 0.85;
+  line-height: 1.6;
+}
+
+.headerActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: v.$space-2;
+  max-width: 400px;
+}
+
+.headerActions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 39px;
+  padding: 9px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.27);
+  border-radius: v.$radius-sm;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.23);
+  }
+}
+
+.overview {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: v.$space-3;
+  margin-bottom: v.$space-5;
+}
+
+.statCard {
+  @include mixins.surface;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 116px;
+  padding: 17px 19px;
+
+  span,
+  small {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  strong {
+    margin: 7px 0 2px;
+    font-size: 30px;
+  }
+}
+
+.statCard:nth-child(3) strong {
+  color: var(--accent);
+}
+
+.statCard:nth-child(4) strong {
+  color: var(--danger);
+}
+
+.toolbar {
+  @include mixins.surface;
+
+  display: grid;
+  gap: v.$space-5;
+  margin-bottom: v.$space-6;
+  padding: 23px;
+  border-radius: v.$radius-lg;
+}
+
+.toolbarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: v.$space-5;
+
+  h2 {
+    margin: 0 0 5px;
+    font-size: 19px;
+  }
+
+  p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+}
+
+.addColumnForm,
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: v.$space-2;
+}
+
+.addColumnForm {
+  justify-content: flex-end;
+
+  input {
+    width: min(100%, 205px);
+  }
+}
+
+.app input,
+.app textarea,
+.app select {
+  min-width: 0;
+  min-height: 41px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: v.$radius-sm;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.app textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+.app input::placeholder,
+.app textarea::placeholder {
+  color: var(--muted);
+}
+
+.addColumnButton {
+  @include mixins.dashed-button;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 41px;
+  padding: 10px 15px;
+  font-size: 13px;
+  font-weight: 700;
+
+  &:hover:not(:disabled) {
+    background: v.$color-bg-hover;
+    color: v.$light-text;
+  }
+}
+
+.filters {
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+
+  > select {
+    flex: 1 1 142px;
+    max-width: 210px;
+    font-size: 13px;
+  }
+}
+
+.searchField {
+  display: inline-flex;
+  flex: 2 1 230px;
+  align-items: center;
+  max-width: 360px;
+  padding-left: 12px;
+  border: 1px solid var(--border);
+  border-radius: v.$radius-sm;
+  color: var(--muted);
+
+  input {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    outline: none;
+  }
+}
+
+.clearButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 41px;
+  padding: 9px 13px;
+  border: 1px solid var(--border);
+  border-radius: v.$radius-sm;
+  background: var(--surface);
+  color: var(--muted);
+}
+
+.notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: v.$space-3;
+  margin-bottom: v.$space-5;
+  padding: v.$space-3 v.$space-4;
+  border: 1px solid var(--accent-border);
+  border-radius: v.$radius-md;
+  background: var(--accent-soft);
+}
+
+.noticeContent {
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-2;
+}
+
+.notice button {
+  @include mixins.icon-button;
+
+  width: 29px;
+  height: 29px;
+  color: var(--text);
+}
+
+.footerNote {
+  margin: v.$space-5 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.app .visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 1100px) {
+  .overview {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .toolbarHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 760px) {
+  .app {
+    padding: 16px 12px 30px;
+  }
+
+  .pageHeader {
+    flex-direction: column;
+    min-height: 0;
+    padding: 25px;
+  }
+
+  .headerActions {
+    justify-content: flex-start;
+    max-width: none;
+  }
+
+  .overview {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .headerActions button,
+  .addColumnForm input,
+  .addColumnForm button,
+  .searchField,
+  .filters > select,
+  .clearButton {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app *,
+  .app *::before,
+  .app *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

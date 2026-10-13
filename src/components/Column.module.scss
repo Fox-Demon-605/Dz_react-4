@@ -1,0 +1,139 @@
+@use '../styles/variables' as v;
+@use '../styles/mixins' as mixins;
+
+.column {
+  --column-accent: #8b81ef;
+
+  flex: 0 0 330px;
+  min-height: 320px;
+  padding: v.$space-4;
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--column-accent);
+  border-radius: v.$radius-md;
+  background: var(--column);
+
+  &:nth-child(4n + 2) {
+    --column-accent: #db9a5a;
+  }
+
+  &:nth-child(4n + 3) {
+    --column-accent: #5cafe0;
+  }
+
+  &:nth-child(4n + 4) {
+    --column-accent: #60b998;
+  }
+}
+
+.dropTarget {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.header,
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: v.$space-2;
+}
+
+.header {
+  align-items: flex-start;
+  min-height: 43px;
+  margin-bottom: v.$space-3;
+}
+
+.title {
+  justify-content: flex-start;
+  min-width: 0;
+  padding-top: 5px;
+
+  h2 {
+    margin: 0;
+    font-size: 15px;
+    overflow-wrap: anywhere;
+  }
+}
+
+.marker {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--column-accent);
+}
+
+.count {
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: v.$space-1;
+
+  button {
+    @include mixins.icon-button;
+
+    width: 27px;
+    height: 27px;
+    padding: 5px;
+  }
+}
+
+.addButton {
+  @include mixins.dashed-button;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: v.$space-2;
+  width: 100%;
+  min-height: 42px;
+  margin-bottom: v.$space-3;
+  padding: 9px 12px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.taskList {
+  display: grid;
+  gap: v.$space-3;
+}
+
+.emptyColumn,
+.emptyMessage {
+  margin: 0;
+  padding: v.$space-5;
+  border: 1px dashed var(--border-strong);
+  border-radius: v.$radius-sm;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.emptyColumn {
+  display: grid;
+  min-height: 140px;
+  place-items: center;
+  background: var(--surface);
+}
+
+.hint {
+  margin: v.$space-3 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .column {
+    flex-basis: min(330px, 88vw);
+  }
+}

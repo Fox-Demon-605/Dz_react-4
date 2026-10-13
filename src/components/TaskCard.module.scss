@@ -1,0 +1,173 @@
+@use '../styles/variables' as v;
+@use '../styles/mixins' as mixins;
+
+.card {
+  @include mixins.surface;
+
+  position: relative;
+  padding: v.$space-4;
+  transition:
+    transform v.$transition-fast,
+    border-color v.$transition-fast,
+    box-shadow v.$transition-fast;
+
+  &:hover,
+  &:focus-within {
+    border-color: var(--accent-border);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-3px);
+  }
+}
+
+.pinned {
+  border-color: var(--accent-border);
+
+  &::before {
+    position: absolute;
+    top: 15px;
+    bottom: 15px;
+    left: -1px;
+    width: 3px;
+    border-radius: 3px;
+    background: var(--accent);
+    content: '';
+  }
+}
+
+.dragging {
+  opacity: 0.55;
+  transform: scale(0.98);
+  cursor: grabbing;
+}
+
+.heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: v.$space-2;
+
+  h3 {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+}
+
+.pinButton {
+  @include mixins.icon-button;
+
+  flex: 0 0 auto;
+  padding: 3px;
+  color: var(--accent);
+}
+
+.description {
+  margin: v.$space-3 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.meta,
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: v.$space-3;
+  font-size: 11px;
+}
+
+.priority,
+.dateBadge,
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 25px;
+  padding: 5px 8px;
+  border-radius: 7px;
+  background: var(--column);
+}
+
+.priority {
+  font-weight: 700;
+}
+
+.priorityHigh,
+.overdue {
+  color: #d34d65;
+}
+
+.priorityMedium {
+  color: #b9782d;
+}
+
+.priorityLow {
+  color: #27946f;
+}
+
+.dateBadge {
+  color: var(--muted);
+}
+
+.dateBadge.overdue {
+  color: #d34d65;
+}
+
+.tag {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: v.$space-1;
+  margin-top: v.$space-4;
+  padding-top: v.$space-3;
+  border-top: 1px solid var(--border);
+
+  button {
+    @include mixins.icon-button;
+
+    min-height: 29px;
+    padding: 5px 6px;
+    font-size: 11px;
+  }
+}
+
+.editButton {
+  gap: 6px;
+  color: var(--accent) !important;
+  font-weight: 700;
+}
+
+.deleteButton:hover:not(:disabled) {
+  color: var(--danger) !important;
+}
+
+.moveSelect {
+  display: grid;
+  gap: 6px;
+  margin-top: v.$space-3;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+
+  select {
+    width: 100%;
+    min-height: 36px;
+    padding: 7px 9px;
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover,
+  .card:focus-within {
+    transform: none;
+  }
+}

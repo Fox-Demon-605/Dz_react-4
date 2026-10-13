@@ -1,0 +1,97 @@
+@use '../styles/variables' as v;
+@use '../styles/mixins' as mixins;
+
+.dialog {
+  width: min(94vw, 540px);
+  max-height: min(90vh, 800px);
+  padding: v.$space-6;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: v.$radius-lg;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-hover);
+  color-scheme: inherit;
+
+  &::backdrop {
+    background: rgba(11, 14, 30, 0.65);
+  }
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: v.$space-4;
+  margin-bottom: v.$space-5;
+
+  h2 {
+    margin: 0;
+    font-size: 21px;
+  }
+}
+
+.closeButton {
+  @include mixins.icon-button;
+
+  width: 34px;
+  height: 34px;
+}
+
+.form {
+  display: grid;
+  gap: v.$space-4;
+
+  label {
+    display: grid;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  input,
+  textarea,
+  select {
+    width: 100%;
+  }
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: v.$space-3;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: v.$space-2;
+  margin-top: v.$space-2;
+}
+
+.saveButton {
+  @include mixins.primary-button;
+}
+
+.cancelButton {
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-2;
+  min-height: 41px;
+  padding: 10px 15px;
+  border: 1px solid var(--border);
+  border-radius: v.$radius-sm;
+  background: var(--surface);
+  color: var(--text);
+}
+
+@media (max-width: 480px) {
+  .dialog {
+    padding: v.$space-4;
+  }
+
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+}
