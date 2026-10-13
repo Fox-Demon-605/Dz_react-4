@@ -161,12 +161,16 @@ const normalizeImportedBoard = (data) => {
       columnId: task.columnId,
       ...normalized,
       pinned: task.pinned === true,
-      createdAt: typeof task.createdAt === 'string' && !Number.isNaN(Date.parse(task.createdAt))
-        ? task.createdAt
-        : now,
-      updatedAt: typeof task.updatedAt === 'string' && !Number.isNaN(Date.parse(task.updatedAt))
-        ? task.updatedAt
-        : now,
+      createdAt:
+        typeof task.createdAt === 'string' &&
+        !Number.isNaN(Date.parse(task.createdAt))
+          ? task.createdAt
+          : now,
+      updatedAt:
+        typeof task.updatedAt === 'string' &&
+        !Number.isNaN(Date.parse(task.updatedAt))
+          ? task.updatedAt
+          : now,
     }
   })
 
@@ -316,6 +320,7 @@ export const useBoardStore = create(
               ...task,
               id: crypto.randomUUID(),
               title: `${task.title} — копия`,
+              tags: [...task.tags],
               pinned: false,
               createdAt: now,
               updatedAt: now,
