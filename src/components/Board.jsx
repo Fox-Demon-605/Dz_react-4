@@ -6,7 +6,6 @@ import TaskFormModal from './TaskFormModal'
 import styles from './Board.module.scss'
 
 function Board({ columns, tasks, filteredTasks, canReorderTasks }) {
-  // Состояние открытия/закрытия модального окна находится именно в Board.
   const [modal, setModal] = useState(null)
 
   const addTask = useBoardStore((state) => state.addTask)

@@ -171,3 +171,63 @@
     transform: none;
   }
 }
+
+.titleGroup {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    min-width: 0;
+
+    h3 {
+        min-width: 0;
+    }
+}
+
+.dragHandle {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 28px;
+    margin-left: -5px;
+    border-radius: 7px;
+    color: var(--muted);
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+    transition:
+        background-color 180ms ease,
+        color 180ms ease,
+        transform 180ms ease;
+
+    &:hover {
+        background: var(--accent-soft);
+        color: var(--accent);
+        transform: scale(1.08);
+    }
+
+    &:active {
+        cursor: grabbing;
+    }
+
+    svg {
+        pointer-events: none;
+    }
+}
+
+.card.dragging {
+    opacity: 0.45;
+    transform: rotate(-2deg) scale(0.98);
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card.dragging {
+        transform: none;
+    }
+
+    .dragHandle {
+        transition: none;
+    }
+}

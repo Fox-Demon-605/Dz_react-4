@@ -198,6 +198,10 @@ function App() {
   const overdueCount = tasks.filter(isOverdue).length
   const pinnedCount = tasks.filter((task) => task.pinned).length
 
+  const completedCount = tasks.filter(
+    (task) => task.columnId === 'done',
+  ).length
+
   return (
     <main
       className={`${styles.app} ${
@@ -302,6 +306,12 @@ function App() {
             <span>Все задачи</span>
             <strong>{tasks.length}</strong>
             <small>на вашей доске</small>
+          </div>
+
+          <div className={styles.statCard}>
+            <span>Выполнено</span>
+            <strong>{completedCount}</strong>
+            <small>задач завершено</small>
           </div>
 
           <div className={styles.statCard}>
